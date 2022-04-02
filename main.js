@@ -102,6 +102,11 @@ const onCardSelection = (event) => {
   const index = Number(button.getAttribute("x-data-index"));
   //Modifico el modelo
   table[current_player] = players[current_player].hand[index];
+  //Reparto nuevas cartas
+  players[current_player].hand.splice(index, 1);
+  players[current_player].hand.push(cards[0]);
+  cards.shift();
+
   changePlayer();
   //Pintar el modelo
   render();
