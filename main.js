@@ -25,6 +25,7 @@ for (let i = 0; i < MAX_PLAYERS; i++) {
 //Create table
 let table = [];
 function initializeTable() {
+  table = [];
   for (let i = 0; i < MAX_PLAYERS; i++) {
     table.push(new Card(0, null));
   }
@@ -82,11 +83,14 @@ const render = () => {
   }
   tableElement.textContent = "";
   playerHandElement.textContent = "";
+  scoresElement.textContent = "";
   for (let i = 0; i < table.length; i++) {
     tableElement.appendChild(renderTableItem(i));
   }
   for (let i = 0; i < 3; i++) {
-    playerHandElement.appendChild(renderHandItem(i));
+    if (current_player !== null) {
+      playerHandElement.appendChild(renderHandItem(i));
+    }
   }
   for (let i = 0; i < MAX_PLAYERS; i++) {
     scoresElement.appendChild(renderScoreItem(i));
@@ -118,8 +122,14 @@ const onRoundWinner = (event) => {
   const button = event.currentTarget;
   const index = Number(button.getAttribute("x-data-index"));
   //Modifico el modelo
-  table[current_player] = players[current_player].hand[index];
-  changePlayer();
+  let round_points = 0;
+  for (let i = 0; i < MAX_PLAYERS; i++) {
+    round_points += table[i].points;
+  }
+  scores[index] += round_points;
+  start_player = index;
+  current_player = index;
+  initializeTable();
   //Pintar el modelo
   render();
 };

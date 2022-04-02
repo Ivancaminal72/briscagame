@@ -9,6 +9,28 @@ export class Card {
   get pale() {
     return this._pale;
   }
+
+  get points() {
+    switch (this._number) {
+      case 1:
+        return 11;
+        break;
+      case 3:
+        return 10;
+        break;
+      case 12:
+        return 4;
+        break;
+      case 11:
+        return 3;
+        break;
+      case 10:
+        return 2;
+        break;
+      default:
+        return 0;
+    }
+  }
 }
 
 export function dealThreeCards(cards) {
