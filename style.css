@@ -1,0 +1,46 @@
+#player {
+  background-color: lightgreen;
+  width: 20rem;
+  height: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28pt;
+}
+
+#table {
+  background-color: lightsalmon;
+  width: 20rem;
+  height: 5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 28pt;
+}
+
+#table :empty {
+  display: none;
+}
+
+#player-hand {
+  background-color: lightgreen;
+  width: 20rem;
+  height: 5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 28pt;
+}
+
+#scores {
+  background-color: lightblue;
+  width: 20rem;
+  padding: 0;
+  margin: 0;
+}
+
+.card.start {
+  border: 3px solid red;
+}
