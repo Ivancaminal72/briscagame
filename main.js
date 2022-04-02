@@ -39,6 +39,7 @@ for (let i = 0; i < MAX_PLAYERS; i++) {
 
 //View
 const playerElement = document.getElementById("player");
+const tablePaleElement = document.getElementById("table-pale");
 const tableElement = document.getElementById("table");
 const playerHandElement = document.getElementById("player-hand");
 const scoresElement = document.getElementById("scores");
@@ -81,15 +82,23 @@ const render = () => {
   } else {
     playerElement.textContent = `Select round winner`;
   }
+  tablePaleElement.textContent = "";
   tableElement.textContent = "";
   playerHandElement.textContent = "";
   scoresElement.textContent = "";
-  for (let i = 0; i < table.length; i++) {
-    tableElement.appendChild(renderTableItem(i));
-  }
-  for (let i = 0; i < 3; i++) {
-    if (current_player !== null) {
-      playerHandElement.appendChild(renderHandItem(i));
+  const button = document.createElement("button");
+  button.classList.add("card");
+  if (cards.length !== 0) {
+    button.textContent =
+      cards[cards.length - 1].number + " " + cards[cards.length - 1].pale;
+    tablePaleElement.appendChild(button);
+    for (let i = 0; i < table.length; i++) {
+      tableElement.appendChild(renderTableItem(i));
+    }
+    for (let i = 0; i < 3; i++) {
+      if (current_player !== null) {
+        playerHandElement.appendChild(renderHandItem(i));
+      }
     }
   }
   for (let i = 0; i < MAX_PLAYERS; i++) {

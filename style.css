@@ -8,6 +8,17 @@
   font-size: 28pt;
 }
 
+#table-pale {
+  background-color: lightsalmon;
+  width: 20rem;
+  height: 3rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 28pt;
+}
+
 #table {
   background-color: lightsalmon;
   width: 20rem;
