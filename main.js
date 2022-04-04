@@ -77,28 +77,31 @@ const renderScoreItem = (index) => {
 };
 
 const render = () => {
-  if (current_player !== null) {
-    playerElement.textContent = `Player ${current_player}`;
-  } else {
+  if (current_player === null) {
     playerElement.textContent = `Select round winner`;
+  } else if (cards.length === 0 && players[current_player].hand.length === 0) {
+    playerElement.textContent = `End game`;
+  } else {
+    // console.log(players[current_player].hand);
+    playerElement.textContent = `Player ${current_player}`;
   }
   tablePaleElement.textContent = "";
   tableElement.textContent = "";
   playerHandElement.textContent = "";
   scoresElement.textContent = "";
-  const button = document.createElement("button");
-  button.classList.add("card");
   if (cards.length !== 0) {
+    const button = document.createElement("button");
+    button.classList.add("card");
     button.textContent =
       cards[cards.length - 1].number + " " + cards[cards.length - 1].pale;
     tablePaleElement.appendChild(button);
-    for (let i = 0; i < table.length; i++) {
-      tableElement.appendChild(renderTableItem(i));
-    }
-    for (let i = 0; i < 3; i++) {
-      if (current_player !== null) {
-        playerHandElement.appendChild(renderHandItem(i));
-      }
+  }
+  for (let i = 0; i < table.length; i++) {
+    tableElement.appendChild(renderTableItem(i));
+  }
+  if (current_player !== null) {
+    for (let i = 0; i < players[current_player].hand.length; i++) {
+      playerHandElement.appendChild(renderHandItem(i));
     }
   }
   for (let i = 0; i < MAX_PLAYERS; i++) {
@@ -113,8 +116,10 @@ const onCardSelection = (event) => {
   table[current_player] = players[current_player].hand[index];
   //Reparto nuevas cartas
   players[current_player].hand.splice(index, 1);
-  players[current_player].hand.push(cards[0]);
-  cards.shift();
+  if (cards.length > 0) {
+    players[current_player].hand.push(cards[0]);
+    cards.shift();
+  }
 
   changePlayer();
   //Pintar el modelo
