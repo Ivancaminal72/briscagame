@@ -48,10 +48,7 @@ const scoresElement = document.getElementById("scores");
 const renderHandItem = (index) => {
   const button = document.createElement("button");
   button.classList.add("card");
-  button.textContent =
-    players[current_player].hand[index].number +
-    " " +
-    players[current_player].hand[index].pale;
+  button.textContent = players[current_player].hand[index].toString();
   button.setAttribute("x-data-index", index);
   button.addEventListener("click", onCardSelection);
   return button;
@@ -64,7 +61,7 @@ const renderTableItem = (index) => {
   if (index === start_player) {
     button.classList.add("start");
   }
-  button.textContent = table[index].number + " " + table[index].pale;
+  button.textContent = table[index].toString();
   button.setAttribute("x-data-index", index);
   button.addEventListener("click", onRoundWinner);
   return button;
@@ -92,8 +89,7 @@ const render = () => {
   if (cards.length !== 0) {
     const button = document.createElement("button");
     button.classList.add("card");
-    button.textContent =
-      cards[cards.length - 1].number + " " + cards[cards.length - 1].pale;
+    button.textContent = cards[cards.length - 1].toString();
     tablePaleElement.appendChild(button);
   }
   for (let i = 0; i < table.length; i++) {

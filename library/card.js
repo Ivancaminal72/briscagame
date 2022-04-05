@@ -10,6 +10,10 @@ export class Card {
     return this._pale;
   }
 
+  toString() {
+    return this._number + " " + this._pale;
+  }
+
   get points() {
     switch (this._number) {
       case 1:
