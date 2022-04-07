@@ -1,41 +1,7 @@
 import "./style.css";
-import { Card, dealThreeCards } from "./library/card";
-import { Player } from "./library/player";
+import { Brisca } from "./library/brisca";
 
-const PALES = ["basto", "espasa", "oro", "copa"];
-const MAX_PLAYERS = 4;
-
-//Build cards
-let cards = [];
-for (let pale of PALES) {
-  for (let i = 1; i <= 12; i++) {
-    cards.push(new Card(i, pale));
-  }
-}
-
-//Shuffle cards
-cards = cards.sort(() => Math.random() - 0.5);
-
-//Create players
-let players = [];
-for (let i = 0; i < MAX_PLAYERS; i++) {
-  players.push(new Player(dealThreeCards(cards)));
-}
-
-//Create table
-let table = [];
-function initializeTable() {
-  table = [];
-  for (let i = 0; i < MAX_PLAYERS; i++) {
-    table.push(new Card(0, null));
-  }
-}
-
-//Create scores
-let scores = [];
-for (let i = 0; i < MAX_PLAYERS; i++) {
-  scores.push(0);
-}
+let brisca = new Brisca(4);
 
 //View
 const playerElement = document.getElementById("player");
@@ -48,7 +14,7 @@ const scoresElement = document.getElementById("scores");
 const renderHandItem = (index) => {
   const button = document.createElement("button");
   button.classList.add("card");
-  button.textContent = players[current_player].hand[index].toString();
+  button.textContent = brisca.getHandItem(index);
   button.setAttribute("x-data-index", index);
   button.addEventListener("click", onCardSelection);
   return button;
@@ -56,12 +22,12 @@ const renderHandItem = (index) => {
 
 const renderTableItem = (index) => {
   const button = document.createElement("button");
-  if (table[index].pale === null) return button;
+  if (brisca.table[index].pale === null) return button;
   button.classList.add("card");
-  if (index === start_player) {
+  if (index === brisca.start_player) {
     button.classList.add("start");
   }
-  button.textContent = table[index].toString();
+  button.textContent = brisca.table[index].toString();
   button.setAttribute("x-data-index", index);
   button.addEventListener("click", onRoundWinner);
   return button;
@@ -69,38 +35,45 @@ const renderTableItem = (index) => {
 
 const renderScoreItem = (index) => {
   const li = document.createElement("li");
-  li.textContent = `Player ${index}: ${scores[index]}`;
+  li.textContent = `Player ${index}: ${brisca.scores[index]}`;
   return li;
 };
 
 const render = () => {
-  if (current_player === null) {
+  if (brisca.current_player === null) {
     playerElement.textContent = `Select round winner`;
-  } else if (cards.length === 0 && players[current_player].hand.length === 0) {
+  } else if (
+    brisca.cards.length === 0 &&
+    brisca.players[brisca.current_player].hand.length === 0
+  ) {
     playerElement.textContent = `End game`;
   } else {
     // console.log(players[current_player].hand);
-    playerElement.textContent = `Player ${current_player}`;
+    playerElement.textContent = `Player ${brisca.current_player}`;
   }
   tablePaleElement.textContent = "";
   tableElement.textContent = "";
   playerHandElement.textContent = "";
   scoresElement.textContent = "";
-  if (cards.length !== 0) {
+  if (brisca.cards.length !== 0) {
     const button = document.createElement("button");
     button.classList.add("card");
-    button.textContent = cards[cards.length - 1].toString();
+    button.textContent = brisca.getLastCard();
     tablePaleElement.appendChild(button);
   }
-  for (let i = 0; i < table.length; i++) {
+  for (let i = 0; i < brisca.table.length; i++) {
     tableElement.appendChild(renderTableItem(i));
   }
-  if (current_player !== null) {
-    for (let i = 0; i < players[current_player].hand.length; i++) {
+  if (brisca.current_player !== null) {
+    for (
+      let i = 0;
+      i < brisca.players[brisca.current_player].hand.length;
+      i++
+    ) {
       playerHandElement.appendChild(renderHandItem(i));
     }
   }
-  for (let i = 0; i < MAX_PLAYERS; i++) {
+  for (let i = 0; i < brisca.max_players; i++) {
     scoresElement.appendChild(renderScoreItem(i));
   }
 };
@@ -109,47 +82,26 @@ const onCardSelection = (event) => {
   const button = event.currentTarget;
   const index = Number(button.getAttribute("x-data-index"));
   //Modifico el modelo
-  table[current_player] = players[current_player].hand[index];
+  brisca.throwCardOnTheTable(index);
   //Reparto nuevas cartas
-  players[current_player].hand.splice(index, 1);
-  if (cards.length > 0) {
-    players[current_player].hand.push(cards[0]);
-    cards.shift();
-  }
-
-  changePlayer();
+  brisca.giveNewCards(index);
+  brisca.changePlayer();
   //Pintar el modelo
   render();
 };
 
-function changePlayer() {
-  current_player += 1;
-  if (current_player === MAX_PLAYERS) {
-    current_player = 0;
-  }
-  if (current_player === start_player) {
-    current_player = null;
-  }
-}
-
 const onRoundWinner = (event) => {
-  if (current_player !== null) return;
+  if (brisca.current_player !== null) return;
   const button = event.currentTarget;
   const index = Number(button.getAttribute("x-data-index"));
   //Modifico el modelo
-  let round_points = 0;
-  for (let i = 0; i < MAX_PLAYERS; i++) {
-    round_points += table[i].points;
-  }
-  scores[index] += round_points;
-  start_player = index;
-  current_player = index;
-  initializeTable();
+  brisca.scores[index] += brisca.getRoundPoints();
+  brisca.start_player = index;
+  brisca.current_player = index;
+  brisca.initializeTable();
   //Pintar el modelo
   render();
 };
 
-let start_player = 0;
-let current_player = 0;
-initializeTable();
+brisca.initializeTable();
 render();
