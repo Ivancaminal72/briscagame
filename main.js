@@ -42,10 +42,7 @@ const renderScoreItem = (index) => {
 const render = () => {
   if (brisca.current_player === null) {
     playerElement.textContent = `Select round winner`;
-  } else if (
-    brisca.cards.length === 0 &&
-    brisca.players[brisca.current_player].hand.length === 0
-  ) {
+  } else if (brisca.isEndGame()) {
     playerElement.textContent = `End game`;
   } else {
     // console.log(players[current_player].hand);
@@ -65,11 +62,7 @@ const render = () => {
     tableElement.appendChild(renderTableItem(i));
   }
   if (brisca.current_player !== null) {
-    for (
-      let i = 0;
-      i < brisca.players[brisca.current_player].hand.length;
-      i++
-    ) {
+    for (let i = 0; i < brisca.currentPlayerHand.length; i++) {
       playerHandElement.appendChild(renderHandItem(i));
     }
   }

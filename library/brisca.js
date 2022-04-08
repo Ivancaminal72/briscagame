@@ -33,6 +33,10 @@ export class Brisca {
     }
   }
 
+  get currentPlayerHand() {
+    return this.players[this.current_player].hand;
+  }
+
   get cards() {
     return this._cards;
   }
@@ -114,5 +118,12 @@ export class Brisca {
       round_points += this._table[i].points;
     }
     return round_points;
+  }
+
+  isEndGame() {
+    return (
+      this._cards.length === 0 &&
+      this._players[this._current_player].hand.length === 0
+    );
   }
 }
